@@ -1,0 +1,66 @@
+﻿@model DashboardVm
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>My Dashboard</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        @if (Model.IsAdmin)
+        {
+            <div class="col-lg-3">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-user-secret fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Today doctor </span>
+                            <h2 class="font-bold">@Model.Doctor</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-lg-3">
+            <div class="widget style1 lazur-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-users fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Total patient </span>
+                        <h2 class="font-bold">@Model.Patient</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget style1 yellow-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-medkit fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> Total treatment </span>
+                        <h2 class="font-bold">@Model.Treatment</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,74 @@
+﻿@{
+    var role = AccountFunctions.GetCurrentRole();
+}
+
+<div class="row border-bottom white-bg">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <i class="fa fa-reorder"></i>
+            </button>
+            <a href="#" class="navbar-brand bg-success">Medical Reference</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar">
+            <ul class="nav navbar-nav">
+
+                @if (string.IsNullOrWhiteSpace(role))
+                {
+                    <li class="@Html.IsSelected("Treatment", "History")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("History", "Treatment")"> History</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="@Html.IsSelected("Dashboard")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("Index", "Dashboard")"> Dashboard</a>
+                    </li>
+
+                    <li class="@Html.IsSelected("Treatment", "Index")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("Index", "Treatment", new {id =0, pid=0})"> Add Treatment</a>
+                    </li>
+
+                    <li class="@Html.IsSelected("Treatment", "History")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("History", "Treatment")"> View Treatment(s)</a>
+                    </li>
+
+                    if (role.Equals("Admin"))
+                    {
+                        <li class="@Html.IsSelected("Users", "Doctors")">
+                            <a aria-expanded="false" role="button" href="@Url.Action("Doctors", "Users")"> Doctors</a>
+                        </li>
+
+                        <li class="@Html.IsSelected("Users", "Patients")">
+                            <a aria-expanded="false" role="button" href="@Url.Action("Patients", "Users")"> Patients</a>
+                        </li>
+                    }
+
+                    <li class="@Html.IsSelected("Home", "About")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("About", "Home")"> About</a>
+                    </li>
+
+                    <li class="@Html.IsSelected("Home", "Contact")">
+                        <a aria-expanded="false" role="button" href="@Url.Action("Contact", "Home")"> Contact</a>
+                    </li>
+                }
+            </ul>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+@*<li class="dropdown">
+        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Treatment <span class="caret"></span></a>
+        <ul role="menu" class="dropdown-menu">
+            <li><a href="">Add New</a></li>
+            <li><a href="">View All</a></li>
+        </ul>
+    </li>*@

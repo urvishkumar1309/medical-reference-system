@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CityMaster">
+          <Key>
+            <PropertyRef Name="CityMasterId" />
+          </Key>
+          <Property Name="CityMasterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateMasterId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Doctor">
+          <Key>
+            <PropertyRef Name="DoctorId" />
+          </Key>
+          <Property Name="DoctorId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateMasterId" Type="bigint" Nullable="false" />
+          <Property Name="CityMasterId" Type="bigint" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="Aadhaar" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="Mobile" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Degree" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Designation" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="HospitalName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="HospitalAddress" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="HospitalPincode" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="Profile" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="PatientId" />
+          </Key>
+          <Property Name="PatientId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateMasterId" Type="bigint" Nullable="false" />
+          <Property Name="CityMasterId" Type="bigint" Nullable="false" />
+          <Property Name="Aadhaar" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="Mobile" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BloodGroup" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Pincode" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="Profile" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Prescription">
+          <Key>
+            <PropertyRef Name="PrescriptionId" />
+          </Key>
+          <Property Name="PrescriptionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TreatmentId" Type="bigint" Nullable="false" />
+          <Property Name="Medicine" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Quntity" Type="int" Nullable="false" />
+          <Property Name="Morning" Type="int" Nullable="false" />
+          <Property Name="Noon" Type="int" Nullable="false" />
+          <Property Name="Evening" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StateMaster">
+          <Key>
+            <PropertyRef Name="StateMasterId" />
+          </Key>
+          <Property Name="StateMasterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Treatment">
+          <Key>
+            <PropertyRef Name="TreatmentId" />
+          </Key>
+          <Property Name="TreatmentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DoctorId" Type="bigint" Nullable="false" />
+          <Property Name="PatientId" Type="bigint" Nullable="false" />
+          <Property Name="DiseaseName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="DiseaseReview" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="DiseaseRating" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Advice" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="AttachedFile" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <Association Name="FK_CityMaster_StateMaster">
+          <End Role="StateMaster" Type="Self.StateMaster" Multiplicity="1" />
+          <End Role="CityMaster" Type="Self.CityMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="CityMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Doctor_CityMaster">
+          <End Role="CityMaster" Type="Self.CityMaster" Multiplicity="1" />
+          <End Role="Doctor" Type="Self.Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CityMaster">
+              <PropertyRef Name="CityMasterId" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="CityMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Doctor_StateMaster">
+          <End Role="StateMaster" Type="Self.StateMaster" Multiplicity="1" />
+          <End Role="Doctor" Type="Self.Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_CityMaster">
+          <End Role="CityMaster" Type="Self.CityMaster" Multiplicity="1" />
+          <End Role="Patient" Type="Self.Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CityMaster">
+              <PropertyRef Name="CityMasterId" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="CityMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_StateMaster">
+          <End Role="StateMaster" Type="Self.StateMaster" Multiplicity="1" />
+          <End Role="Patient" Type="Self.Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Prescription_Treatment">
+          <End Role="Treatment" Type="Self.Treatment" Multiplicity="1" />
+          <End Role="Prescription" Type="Self.Prescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Treatment">
+              <PropertyRef Name="TreatmentId" />
+            </Principal>
+            <Dependent Role="Prescription">
+              <PropertyRef Name="TreatmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_Doctor">
+          <End Role="Doctor" Type="Self.Doctor" Multiplicity="1" />
+          <End Role="Treatment" Type="Self.Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="DoctorId" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_Patient">
+          <End Role="Patient" Type="Self.Patient" Multiplicity="1" />
+          <End Role="Treatment" Type="Self.Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="PatientId" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelsStoreContainer">
+          <EntitySet Name="CityMaster" EntityType="Self.CityMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Doctor" EntityType="Self.Doctor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Patient" EntityType="Self.Patient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Prescription" EntityType="Self.Prescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StateMaster" EntityType="Self.StateMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Treatment" EntityType="Self.Treatment" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CityMaster_StateMaster" Association="Self.FK_CityMaster_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMaster" />
+            <End Role="CityMaster" EntitySet="CityMaster" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctor_CityMaster" Association="Self.FK_Doctor_CityMaster">
+            <End Role="CityMaster" EntitySet="CityMaster" />
+            <End Role="Doctor" EntitySet="Doctor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctor_StateMaster" Association="Self.FK_Doctor_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMaster" />
+            <End Role="Doctor" EntitySet="Doctor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_CityMaster" Association="Self.FK_Patient_CityMaster">
+            <End Role="CityMaster" EntitySet="CityMaster" />
+            <End Role="Patient" EntitySet="Patient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_StateMaster" Association="Self.FK_Patient_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMaster" />
+            <End Role="Patient" EntitySet="Patient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Prescription_Treatment" Association="Self.FK_Prescription_Treatment">
+            <End Role="Treatment" EntitySet="Treatment" />
+            <End Role="Prescription" EntitySet="Prescription" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_Doctor" Association="Self.FK_Treatment_Doctor">
+            <End Role="Doctor" EntitySet="Doctor" />
+            <End Role="Treatment" EntitySet="Treatment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_Patient" Association="Self.FK_Treatment_Patient">
+            <End Role="Patient" EntitySet="Patient" />
+            <End Role="Treatment" EntitySet="Treatment" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CityMasters" EntityType="Models.CityMaster" />
+          <EntitySet Name="Doctors" EntityType="Models.Doctor" />
+          <EntitySet Name="Patients" EntityType="Models.Patient" />
+          <EntitySet Name="Prescriptions" EntityType="Models.Prescription" />
+          <EntitySet Name="StateMasters" EntityType="Models.StateMaster" />
+          <EntitySet Name="Treatments" EntityType="Models.Treatment" />
+          <AssociationSet Name="FK_CityMaster_StateMaster" Association="Models.FK_CityMaster_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMasters" />
+            <End Role="CityMaster" EntitySet="CityMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctor_CityMaster" Association="Models.FK_Doctor_CityMaster">
+            <End Role="CityMaster" EntitySet="CityMasters" />
+            <End Role="Doctor" EntitySet="Doctors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_CityMaster" Association="Models.FK_Patient_CityMaster">
+            <End Role="CityMaster" EntitySet="CityMasters" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctor_StateMaster" Association="Models.FK_Doctor_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMasters" />
+            <End Role="Doctor" EntitySet="Doctors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_Doctor" Association="Models.FK_Treatment_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="Treatment" EntitySet="Treatments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patient_StateMaster" Association="Models.FK_Patient_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMasters" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_Patient" Association="Models.FK_Treatment_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Treatment" EntitySet="Treatments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Prescription_Treatment" Association="Models.FK_Prescription_Treatment">
+            <End Role="Treatment" EntitySet="Treatments" />
+            <End Role="Prescription" EntitySet="Prescriptions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CityMaster">
+          <Key>
+            <PropertyRef Name="CityMasterId" />
+          </Key>
+          <Property Name="CityMasterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateMasterId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="StateMaster" Relationship="Models.FK_CityMaster_StateMaster" FromRole="CityMaster" ToRole="StateMaster" />
+          <NavigationProperty Name="Doctors" Relationship="Models.FK_Doctor_CityMaster" FromRole="CityMaster" ToRole="Doctor" />
+          <NavigationProperty Name="Patients" Relationship="Models.FK_Patient_CityMaster" FromRole="CityMaster" ToRole="Patient" />
+        </EntityType>
+        <EntityType Name="Doctor">
+          <Key>
+            <PropertyRef Name="DoctorId" />
+          </Key>
+          <Property Name="DoctorId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateMasterId" Type="Int64" Nullable="false" />
+          <Property Name="CityMasterId" Type="Int64" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Aadhaar" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Degree" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Designation" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalAddress" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalPincode" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Profile" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CityMaster" Relationship="Models.FK_Doctor_CityMaster" FromRole="Doctor" ToRole="CityMaster" />
+          <NavigationProperty Name="StateMaster" Relationship="Models.FK_Doctor_StateMaster" FromRole="Doctor" ToRole="StateMaster" />
+          <NavigationProperty Name="Treatments" Relationship="Models.FK_Treatment_Doctor" FromRole="Doctor" ToRole="Treatment" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="PatientId" />
+          </Key>
+          <Property Name="PatientId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateMasterId" Type="Int64" Nullable="false" />
+          <Property Name="CityMasterId" Type="Int64" Nullable="false" />
+          <Property Name="Aadhaar" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BloodGroup" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Pincode" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Profile" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CityMaster" Relationship="Models.FK_Patient_CityMaster" FromRole="Patient" ToRole="CityMaster" />
+          <NavigationProperty Name="StateMaster" Relationship="Models.FK_Patient_StateMaster" FromRole="Patient" ToRole="StateMaster" />
+          <NavigationProperty Name="Treatments" Relationship="Models.FK_Treatment_Patient" FromRole="Patient" ToRole="Treatment" />
+        </EntityType>
+        <EntityType Name="Prescription">
+          <Key>
+            <PropertyRef Name="PrescriptionId" />
+          </Key>
+          <Property Name="PrescriptionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TreatmentId" Type="Int64" Nullable="false" />
+          <Property Name="Medicine" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Quntity" Type="Int32" Nullable="false" />
+          <Property Name="Morning" Type="Int32" Nullable="false" />
+          <Property Name="Noon" Type="Int32" Nullable="false" />
+          <Property Name="Evening" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Treatment" Relationship="Models.FK_Prescription_Treatment" FromRole="Prescription" ToRole="Treatment" />
+        </EntityType>
+        <EntityType Name="StateMaster">
+          <Key>
+            <PropertyRef Name="StateMasterId" />
+          </Key>
+          <Property Name="StateMasterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CityMasters" Relationship="Models.FK_CityMaster_StateMaster" FromRole="StateMaster" ToRole="CityMaster" />
+          <NavigationProperty Name="Doctors" Relationship="Models.FK_Doctor_StateMaster" FromRole="StateMaster" ToRole="Doctor" />
+          <NavigationProperty Name="Patients" Relationship="Models.FK_Patient_StateMaster" FromRole="StateMaster" ToRole="Patient" />
+        </EntityType>
+        <EntityType Name="Treatment">
+          <Key>
+            <PropertyRef Name="TreatmentId" />
+          </Key>
+          <Property Name="TreatmentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DoctorId" Type="Int64" Nullable="false" />
+          <Property Name="PatientId" Type="Int64" Nullable="false" />
+          <Property Name="DiseaseName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="DiseaseReview" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DiseaseRating" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Advice" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="AttachedFile" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Doctor" Relationship="Models.FK_Treatment_Doctor" FromRole="Treatment" ToRole="Doctor" />
+          <NavigationProperty Name="Patient" Relationship="Models.FK_Treatment_Patient" FromRole="Treatment" ToRole="Patient" />
+          <NavigationProperty Name="Prescriptions" Relationship="Models.FK_Prescription_Treatment" FromRole="Treatment" ToRole="Prescription" />
+        </EntityType>
+        <Association Name="FK_CityMaster_StateMaster">
+          <End Type="Models.StateMaster" Role="StateMaster" Multiplicity="1" />
+          <End Type="Models.CityMaster" Role="CityMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="CityMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Doctor_CityMaster">
+          <End Type="Models.CityMaster" Role="CityMaster" Multiplicity="1" />
+          <End Type="Models.Doctor" Role="Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CityMaster">
+              <PropertyRef Name="CityMasterId" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="CityMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_CityMaster">
+          <End Type="Models.CityMaster" Role="CityMaster" Multiplicity="1" />
+          <End Type="Models.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CityMaster">
+              <PropertyRef Name="CityMasterId" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="CityMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Doctor_StateMaster">
+          <End Type="Models.StateMaster" Role="StateMaster" Multiplicity="1" />
+          <End Type="Models.Doctor" Role="Doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="Doctor">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_Doctor">
+          <End Type="Models.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="Models.Treatment" Role="Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="DoctorId" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Patient_StateMaster">
+          <End Type="Models.StateMaster" Role="StateMaster" Multiplicity="1" />
+          <End Type="Models.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateMasterId" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="StateMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_Patient">
+          <End Type="Models.Patient" Role="Patient" Multiplicity="1" />
+          <End Type="Models.Treatment" Role="Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="PatientId" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="PatientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Prescription_Treatment">
+          <End Type="Models.Treatment" Role="Treatment" Multiplicity="1" />
+          <End Type="Models.Prescription" Role="Prescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Treatment">
+              <PropertyRef Name="TreatmentId" />
+            </Principal>
+            <Dependent Role="Prescription">
+              <PropertyRef Name="TreatmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelsStoreContainer" CdmEntityContainer="DBEntities">
+          <EntitySetMapping Name="CityMasters">
+            <EntityTypeMapping TypeName="Models.CityMaster">
+              <MappingFragment StoreEntitySet="CityMaster">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StateMasterId" ColumnName="StateMasterId" />
+                <ScalarProperty Name="CityMasterId" ColumnName="CityMasterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Doctors">
+            <EntityTypeMapping TypeName="Models.Doctor">
+              <MappingFragment StoreEntitySet="Doctor">
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="HospitalPincode" ColumnName="HospitalPincode" />
+                <ScalarProperty Name="HospitalAddress" ColumnName="HospitalAddress" />
+                <ScalarProperty Name="HospitalName" ColumnName="HospitalName" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Degree" ColumnName="Degree" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Aadhaar" ColumnName="Aadhaar" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CityMasterId" ColumnName="CityMasterId" />
+                <ScalarProperty Name="StateMasterId" ColumnName="StateMasterId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="Models.Patient">
+              <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Pincode" ColumnName="Pincode" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="BloodGroup" ColumnName="BloodGroup" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Aadhaar" ColumnName="Aadhaar" />
+                <ScalarProperty Name="CityMasterId" ColumnName="CityMasterId" />
+                <ScalarProperty Name="StateMasterId" ColumnName="StateMasterId" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Prescriptions">
+            <EntityTypeMapping TypeName="Models.Prescription">
+              <MappingFragment StoreEntitySet="Prescription">
+                <ScalarProperty Name="Evening" ColumnName="Evening" />
+                <ScalarProperty Name="Noon" ColumnName="Noon" />
+                <ScalarProperty Name="Morning" ColumnName="Morning" />
+                <ScalarProperty Name="Quntity" ColumnName="Quntity" />
+                <ScalarProperty Name="Medicine" ColumnName="Medicine" />
+                <ScalarProperty Name="TreatmentId" ColumnName="TreatmentId" />
+                <ScalarProperty Name="PrescriptionId" ColumnName="PrescriptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StateMasters">
+            <EntityTypeMapping TypeName="Models.StateMaster">
+              <MappingFragment StoreEntitySet="StateMaster">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StateMasterId" ColumnName="StateMasterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Treatments">
+            <EntityTypeMapping TypeName="Models.Treatment">
+              <MappingFragment StoreEntitySet="Treatment">
+                <ScalarProperty Name="AttachedFile" ColumnName="AttachedFile" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Advice" ColumnName="Advice" />
+                <ScalarProperty Name="DiseaseRating" ColumnName="DiseaseRating" />
+                <ScalarProperty Name="DiseaseReview" ColumnName="DiseaseReview" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="PatientId" ColumnName="PatientId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="TreatmentId" ColumnName="TreatmentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

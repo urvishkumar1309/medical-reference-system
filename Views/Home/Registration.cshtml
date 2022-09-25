@@ -1,0 +1,245 @@
+﻿@model Doctor
+
+@{
+    ViewBag.Title = "Registration";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="ibox-content">
+        @using (Html.BeginForm("Registration", "Home", FormMethod.Post, new { @class = "m-t", id = "frm" }))
+        {
+            <blockquote style="border-left: 5px solid #1B7BB9">
+                <h1 class="text-success"><strong>Doctor Registration</strong></h1>
+                <h3>Sign-up Here</h3>
+            </blockquote>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Aadhaar Number:</label>
+                        @Html.TextBoxFor(s => s.Aadhaar, new { @class = "form-control", placeholder = "1234 XXXX XXXX" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Full Name:</label>
+                        @Html.TextBoxFor(s => s.Name, new { @class = "form-control", placeholder = "Joe Smith" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        @Html.TextBoxFor(s => s.Email, new { @class = "form-control", placeholder = "abc@xyz.com" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Password:</label>
+                        @Html.PasswordFor(s => s.Password, new { @class = "form-control", placeholder = "XXXXX" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Mobile:</label>
+                        @Html.TextBoxFor(s => s.Mobile, new { @class = "form-control", placeholder = "99XXX XXXXX" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Birth Date:</label>
+                        @Html.TextBoxFor(s => s.BirthDate, new { @class = "form-control", placeholder = "dd-mm-yyyy" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Gender:</label>
+                        <select id="Gender" name="Gender" class="form-control">
+                            <option value="Male"> Male</option>
+                            <option value="Female"> Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Degree:</label>
+                        @Html.TextBoxFor(s => s.Degree, new { @class = "form-control", placeholder = "M.B.B.S, MS" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Designation:</label>
+                        @Html.TextBoxFor(s => s.Designation, new { @class = "form-control", placeholder = "Orthopedic" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Hospital Name:</label>
+                        @Html.TextBoxFor(s => s.HospitalName, new { @class = "form-control", placeholder = "Walkheart Multi Specialist" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>State:</label>
+                        @Html.DropDownListFor(s => s.StateMasterId, CommonFunctions.DropDownGetState(Model.StateMasterId), new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>City:</label>
+                        <select id="CityMasterId" name="CityMasterId" class="form-control">
+                            <option value=""> Select City </option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Pincode:</label>
+                        @Html.TextBoxFor(s => s.HospitalPincode, new { @class = "form-control", placeholder = "390023" })
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Address:</label>
+                        @Html.TextBoxFor(s => s.HospitalAddress, new { @class = "form-control", placeholder = "Waghodiya Road, Vadodara" })
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="reset" class="btn btn-default">Reset</button>
+                </div>
+            </div>
+
+            <br />
+            <a href="@Url.Action("Index")">
+                <small><i class="fa fa-backward"></i> Back to login!</small>
+            </a>
+
+        }
+    </div>
+</div>
+
+<link href='~/Content/plugins/flatpicker/flatpickr.min.css' rel='stylesheet' />
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/plugins/validate")
+
+    <script src='~/Content/plugins/flatpicker/flatpickr.min.js'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+             
+            $('#BirthDate').flatpickr({
+                dateFormat: "d-m-Y",
+                disableMobile: "true",
+                defaultDate: 'today',
+                maxDate: 'today',
+                position: 'below'
+            });
+
+
+            $('#StateMasterId').on('change',
+                function() {
+                    //Ajax call to get data
+                    $.ajax({
+                        url: '@Url.Action("GetCities", "Home")',
+                        type: "POST",
+                        data: {  'stateMasterId':  $(this).val()},
+                        dataType: "json"  ,
+                        success: function(result) {
+                            var html = "";
+                            for (var i = 0; i < result.data.length; i++) {
+                                console.log(result.data[i]);
+                                html = html + ' <option value="'+result.data[i].Value+'"> '+result.data[i].Text+' </option>';
+                            }
+                            $('#CityMasterId').html(html);
+                        }
+                    });
+            });
+
+            $("#frm").validate({
+                rules: {
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    StateMasterId: {
+                        required: true
+                    },
+                    CityMasterId: {
+                        required: true
+                    },
+                    Password: {
+                        required: true
+                    },
+                    Name: {
+                        required: true
+                    },
+                    BirthDate: {
+                        required: true
+                    },
+                    Aadhaar: {
+                        required: true,
+                        number: true,
+                        minlength: 12,
+                        maxlength: 12
+                    },
+                    Mobile: {
+                        required: true,
+                        number: true,
+                        minlength: 10,
+                        maxlength: 10
+                    },
+                    Gender: {
+                        required: true
+                    },
+                    Degree: {
+                        required: true
+                    },
+                    Designation: {
+                        required: true
+                    },
+                    HospitalName: {
+                        required: true
+                    },
+                    HospitalAddress: {
+                        required: true
+                    },
+                    HospitalPincode: {
+                        required: true,
+                        number: true,
+                        minlength: 6,
+                        maxlength: 6
+                    }
+                }
+            });
+    });
+    </script>
+}

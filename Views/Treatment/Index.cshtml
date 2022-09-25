@@ -1,0 +1,578 @@
+﻿@model TreatmentVm
+
+@{
+    ViewBag.Title = "Treatment";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Treatment Operation(s)</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>Treatment</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+
+        @if (Model.Patient.PatientId > 0)
+        {
+            <div class="col-lg-3">
+                <div class="widget-head-color-box navy-bg p-lg text-center">
+                    <div class="m-b-md">
+                        <h2 class="font-bold no-margins">
+                            @Model.Patient.FirstName  @Model.Patient.LastName
+                        </h2>
+
+                    </div>
+                    <img src="~/Images/custom/patient.png" class="img-circle circle-border m-b-md" alt="profile" style="width: 130px;">
+                    <div>
+                        <span>DOB: @Model.Patient.BirthDate.ToString("dd MMM, yyyy")</span>
+                    </div>
+                </div>
+                <div class="widget-text-box">
+                    <p class="media-heading">
+                        <strong>Mobile:</strong> +91 @Model.Patient.Mobile
+                    </p>
+                    <p class="media-heading">
+                        <strong>Blood Group:</strong> @Model.Patient.BloodGroup
+                    </p>
+                    <p class="media-heading">
+                        <strong>Gender:</strong> @Model.Patient.Gender
+                    </p>
+                    <p class="media-heading">
+                        <strong>Address:</strong> @Model.Patient.Address
+                    </p>
+                    <p class="media-heading">
+                        <strong>Major Issues:</strong> <span class="text-danger font-bold">@Model.MajorIssues</span>
+                    </p>
+                </div>
+
+
+
+                @if (Model.Doctor.DoctorId > 0)
+                {
+                    <div class="ibox">
+                        <div class="ibox-title bg-success" style="background: #1c84c6 !important">
+                            <h5>
+                                Doctor Details
+                            </h5>
+                        </div>
+                        <div class="ibox-content white-bg">
+                            <p class="media-heading">
+                                <strong>Name:</strong> @Model.Doctor.Name
+                            </p>
+                            <p class="media-heading">
+                                <strong>Degree:</strong> @Model.Doctor.Degree
+                            </p>
+                            <p class="media-heading">
+                                <strong>Designation:</strong> @Model.Doctor.Designation
+                            </p>
+                            <p class="media-heading">
+                                <strong>Hospital:</strong> @Model.Doctor.HospitalName
+                            </p>
+                            <p class="media-heading">
+                                <strong>Address:</strong> @Model.Doctor.HospitalAddress
+                            </p>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+            <div class="col-md-9">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Add Treatment</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("AddTreatment", "Treatment", FormMethod.Post, new { id = "frmAddPatient", enctype = "multipart/form-data" }))
+                    {
+                        <div class="ibox-content" style="background: #FFFFFF !important;">
+                            @Html.HiddenFor(s => s.Treatment.PatientId)
+                            @Html.HiddenFor(s => s.Treatment.DiseaseRating)
+                            @Html.HiddenFor(s => s.Treatment.TreatmentId)
+                            @Html.HiddenFor(s => s.Count)
+
+                            <div class="row">
+                                <div class="col-sm-6 b-r">
+
+                                    @if (AccountFunctions.GetCurrentRole().Equals("Admin"))
+                                    {
+                                        <div class="form-group">
+                                            <label>Select Doctor:</label>
+                                            @Html.DropDownListFor(s => s.Treatment.DoctorId, CommonFunctions.DropDownGetDoctor(Model.Treatment.DoctorId), new { @class = "form-control" })
+                                        </div>
+                                    }
+
+                                    <div class="form-group">
+                                        <label>Treatment Date:</label>
+                                        @Html.TextBoxFor(s => s.Treatment.CreatedDate, new { placeholder = "Covid-19", @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Disease Name:</label>
+                                        @Html.TextBoxFor(s => s.Treatment.DiseaseName, new { placeholder = "Covid-19", @class = "form-control" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Disease Review:</label>
+                                        @Html.TextAreaFor(s => s.Treatment.DiseaseReview, new { placeholder = "Type the review here", @class = "form-control", rows = "3" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Advice:</label>
+                                        @Html.TextAreaFor(s => s.Treatment.Advice, new { placeholder = "If any advice then type here", @class = "form-control", rows = "3" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Disease Rating:</label>
+                                        <div id="Rating"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Attachment:</label>
+                                        <input type="file" name="attachment" id="attachment" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="divPrescription">
+
+                                        @if (Model.Treatment.TreatmentId > 0)
+                                        {
+                                            for (int i = 0; i < Model.Prescriptions.Count; i++)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Medicine:</label>
+                                                        @Html.TextBoxFor(s => s.Prescriptions[i].Medicine, new { @class = "form-control", placeholder = "Medicine" })
+                                                    </div>
+                                                    <div class="col-md-2  no-padding no-margins">
+                                                        <label>Qty:</label>
+                                                        @Html.TextBoxFor(s => s.Prescriptions[i].Quntity, new { @class = "form-control", placeholder = "0", type = "number" })
+                                                    </div>
+                                                    <div class="col-md-2 no-padding no-margins">
+                                                        <label>Morning</label>
+                                                        @Html.TextBoxFor(s => s.Prescriptions[i].Morning, new { @class = "form-control", placeholder = "0", type = "number" })
+                                                    </div>
+                                                    <div class="col-md-2 no-padding no-margins">
+                                                        <label>Noon</label>
+                                                        @Html.TextBoxFor(s => s.Prescriptions[i].Noon, new { @class = "form-control", placeholder = "0", type = "number" })
+                                                    </div>
+                                                    <div class="col-md-2 no-padding no-margins">
+                                                        <label>Evening</label>
+                                                        @Html.TextBoxFor(s => s.Prescriptions[i].Evening, new { @class = "form-control", placeholder = "0", type = "number" })
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label>Medicine:</label>
+                                                    <input type="text" id="Prescriptions_0__Medicine" name="Prescriptions[0].Medicine" class="form-control" placeholder="Medicine" />
+                                                </div>
+                                                <div class="col-md-2  no-padding no-margins">
+                                                    <label>Qty:</label>
+                                                    <input type="number" id="Prescriptions_0__Quntity" name="Prescriptions[0].Quntity" class="form-control" placeholder="0" />
+                                                </div>
+                                                <div class="col-md-2 no-padding no-margins">
+                                                    <label>Morning</label>
+                                                    <input type="number" id="Prescriptions_0__Morning" name="Prescriptions[0].Morning" class="form-control" placeholder="0" />
+                                                </div>
+                                                <div class="col-md-2 no-padding no-margins">
+                                                    <label>Noon</label>
+                                                    <input type="number" id="Prescriptions_0__Noon" name="Prescriptions[0].Noon" class="form-control" placeholder="0" />
+                                                </div>
+                                                <div class="col-md-2 no-padding no-margins">
+                                                    <label>Evening</label>
+                                                    <input type="number" id="Prescriptions_0__Evening" name="Prescriptions[0].Evening" class="form-control" placeholder="0" />
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <button type="button" id="addPrescription" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-plus"></i> &nbsp; New Medicine
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <hr />
+                                    <button type="submit" class="btn btn-success">
+                                        @if (Model.Treatment.TreatmentId > 0)
+                                        {
+                                            @: Update
+                                        }
+                                        else
+                                        {
+                                            @: Submit
+                                        }
+                                    </button>
+                                    <button type="reset" class="btn btn-default">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        }
+
+
+    </div>
+</div>
+
+
+
+<div class="modal inmodal" id="modalViewPatientDetails" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>*@
+                <i class="fa fa-user-circle-o modal-icon text-primary"></i>
+                <h4 class="modal-title">Get Patient Details</h4>
+
+            </div>
+            @using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmCheckPatient" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Patient Aadhaar Number:</label>
+                        <input id="mdPatientAadhaar" name="mdPatientAadhaar" type="text" placeholder="1234 XXXX XXXX" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Patient Birth Date:</label>
+                        <input id="mdPatientBirth" name="mdPatientBirth" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="checkPatientAvailability()">Submit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="modalAddPatientDetails" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>*@
+                <i class="fa fa-user-circle-o modal-icon text-primary"></i>
+                <h4 class="modal-title">Add New Patient </h4>
+            </div>
+            @using (Html.BeginForm("AddPatient", "Treatment", FormMethod.Post, new { id = "frmAddPatient" }))
+            {
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Patient Aadhaar Number:</label>
+                                @Html.TextBoxFor(s => s.Patient.Aadhaar, new { placeholder = "1234 XXXX XXXX", @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>BirthDate:</label>
+                                @Html.TextBoxFor(s => s.Patient.BirthDate, new { placeholder = "dd-mm-yyyy", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>First Name:</label>
+                                @Html.TextBoxFor(s => s.Patient.FirstName, new { placeholder = "Joe", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Middle Name:</label>
+                                @Html.TextBoxFor(s => s.Patient.MiddleName, new { placeholder = "Canady", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Last Name:</label>
+                                @Html.TextBoxFor(s => s.Patient.LastName, new { placeholder = "Smith", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Gender:</label>
+                                <select id="Patient_Gender" name="Patient.Gender" class="form-control">
+                                    <option value="Male"> Male</option>
+                                    <option value="Female"> Female</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Blood Group:</label>
+                                @Html.TextBoxFor(s => s.Patient.BloodGroup, new { placeholder = "AB +ve", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Mobile:</label>
+                                @Html.TextBoxFor(s => s.Patient.Mobile, new { placeholder = "99XXX XXXXX", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>State:</label>
+                                @Html.DropDownListFor(s => s.Patient.StateMasterId, CommonFunctions.DropDownGetState(Model.Patient.StateMasterId), new { @class = "form-control" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>City:</label>
+                                <select id="Patient_CityMasterId" name="Patient.CityMasterId" class="form-control">
+                                    <option value=""> Select City </option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Pincode:</label>
+                                @Html.TextBoxFor(s => s.Patient.Pincode, new { placeholder = "XXXXXX", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Address:</label>
+                                @Html.TextAreaFor(s => s.Patient.Address, new { placeholder = "Waghodiya Road, Vadodara", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(s => s.IsShowModel)
+
+
+@section Styles {
+    <link href='~/Content/plugins/flatpicker/flatpickr.min.css' rel='stylesheet' />
+    @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/plugins/validate")
+    <script src='~/Content/plugins/flatpicker/flatpickr.min.js'></script>
+    @Scripts.Render("~/plugins/ionRange")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var count = parseInt($('#Count').val());
+
+            $('#addPrescription').on('click', function() {
+
+                var html = '<br /> <div class="row"> <div class="col-md-4"> <label>Medicine:</label> <input type="text" id="Prescriptions_'+count+'__Medicine" name="Prescriptions['+count+'].Medicine" class="form-control" placeholder="Medicine" /> </div> <div class="col-md-2  no-padding no-margins"> <label>Qty:</label> <input type="number" id="Prescriptions_'+count+'__Quntity" name="Prescriptions['+count+'].Quntity" class="form-control" placeholder="0" /> </div> <div class="col-md-2 no-padding no-margins"> <label>Morning</label> <input type="number" id="Prescriptions_'+count+'__Morning" name="Prescriptions['+count+'].Morning" class="form-control" placeholder="0" /> </div> <div class="col-md-2 no-padding no-margins"> <label>Noon</label> <input type="number" id="Prescriptions_'+count+'__Noon" name="Prescriptions['+count+'].Noon" class="form-control" placeholder="0" /> </div> <div class="col-md-2 no-padding no-margins"> <label>Evening</label> <input type="number" id="Prescriptions_'+count+'__Evening" name="Prescriptions['+count+'].Evening" class="form-control" placeholder="0" /> </div> </div>';
+                $('#divPrescription').append(html);
+                count++;
+            });
+
+            var rating = parseFloat($('#Treatment_DiseaseRating').val());
+
+            $("#Rating").ionRangeSlider({
+                min: 0,
+                max: 10,
+                from: rating,
+                type: 'single',
+                step: 0.1,
+                postfix: " rating",
+                prettify: false,
+                hasGrid: true,
+                onChange: function(data) {
+                    $('#Treatment_DiseaseRating').val(data.fromNumber);
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
+
+            validateAddPatientForm();
+            validateTreatmentForm();
+
+
+            $('#Treatment_CreatedDate').flatpickr({
+                dateFormat: "d-m-Y",
+                disableMobile: "true",
+                defaultDate: 'today',
+                minDate: 'today',
+                position: 'below'
+            });
+
+            $('#mdPatientBirth').flatpickr({
+                dateFormat: "d-m-Y",
+                disableMobile: "true",
+                defaultDate: 'today',
+                maxDate: 'today',
+                position: 'below'
+            });
+
+            $('#Patient_BirthDate').flatpickr({
+                dateFormat: "d-m-Y",
+                disableMobile: "true",
+                defaultDate: 'today',
+                maxDate: 'today',
+                position: 'below'
+            });
+
+            if ($('#IsShowModel').val() === "True" || $('#IsShowModel').val() === true) {
+                $('#modalViewPatientDetails').modal('show');
+            }
+
+
+
+            $('#Patient_StateMasterId').on('change',
+                function() {
+                    //Ajax call to get data
+                    $.ajax({
+                        url: '@Url.Action("GetCities", "Home")',
+                        type: "POST",
+                        data: {  'stateMasterId':  $(this).val()},
+                        dataType: "json"  ,
+                        success: function(result) {
+                            var html = "";
+                            for (var i = 0; i < result.data.length; i++) {
+                                console.log(result.data[i]);
+                                html = html + ' <option value="'+result.data[i].Value+'"> '+result.data[i].Text+' </option>';
+                            }
+                            $('#Patient_CityMasterId').html(html);
+                        }
+                    });
+                });
+        });
+
+        function checkPatientAvailability() {
+
+            if ($("#frmCheckPatient").valid()) {
+                $.ajax({
+                    url: '@Url.Action("IsPatientExists", "Treatment")',
+                    type: "GET",
+                    data: {  'aadhaar':  $('#mdPatientAadhaar').val()},
+                    dataType: "json"  ,
+                    success: function (result) {
+
+                        $('#modalViewPatientDetails').modal('hide');
+
+                        if (result.status) {
+                            //Patient Already Exist
+                            window.location.href = '/treatment/index/' + result.PatientId;
+                        } else {
+                            //Add Patient
+                            $('#Patient_Aadhaar').val($('#mdPatientAadhaar').val());
+                            $('#Patient_BirthDate').val($('#mdPatientBirth').val());
+                            $('#modalAddPatientDetails').modal('show');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function validateAddPatientForm() {
+            $("#frmAddPatient").validate({
+                rules: {
+                    'Patient.StateMasterId': {
+                        required: true
+                    },
+                    'Patient.CityMasterId': {
+                        required: true
+                    },
+
+                    'Patient.FirstName': {
+                        required: true
+                    },
+                    'Patient.MiddleName': {
+                        required: true
+                    },
+                    'Patient.LastName': {
+                        required: true
+                    },
+                    'Patient.BirthDate': {
+                        required: true
+                    },
+                    'Patient.Aadhaar': {
+                        required: true,
+                        number: true,
+                        minlength: 12,
+                        maxlength: 12
+                    },
+                    'Patient.Mobile': {
+                        required: true,
+                        number: true,
+                        minlength: 10,
+                        maxlength: 10
+                    },
+                    'Patient.BloodGroup': {
+                        required: true
+                    },
+                    'Patient.Address': {
+                        required: true
+                    },
+                    'Patient.Pincode': {
+                        required: true,
+                        number: true,
+                        minlength: 6,
+                        maxlength: 6
+                    }
+                }
+            });
+        }
+
+
+        function validateTreatmentForm() {
+            $("#frmCheckPatient").validate({
+                rules: {
+                    mdPatientBirth: {
+                        required: true
+                    },
+                    mdPatientAadhaar: {
+                        required: true,
+                        number: true,
+                        minlength: 12,
+                        maxlength: 12
+                    }
+                }
+            });
+        }
+    </script>
+}
